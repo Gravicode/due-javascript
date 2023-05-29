@@ -12,6 +12,10 @@ The Javascript DUE library allows for the use of full standard Javascript to acc
 
 This page assumes the user is already familiar with Javascript and there is a development machine that is already setup to build and run Javascript programs. No changes are needed there but we are using Microsoft Visual Studio Code as a personal preference.
 
+##### Hello World
+
+Just clone this repo, and open duelink.html with your fav browser for the sample app using DUE JS Library
+
 ##### Tip
 
 If this is the first time you use your device, start by visiting the [Hardware](https://duelink.com/hardware/intro.html) page and load your device with the appropriate firmware. The [Console](https://duelink.com/software/console.html) is also a great place to start.
@@ -21,7 +25,7 @@ Start a new project with a simple line of code to test out the project is runnin
     print("Hello DUE!")
     
 
-We now need to copy the DUE Javascript library [JS LIB](https://github.com/Gravicode/due-javascript/). The library is also available on the [downloads](https://duelink.com/software/downloads.html) page if needed.
+We now need to copy the DUE Javascript library [JS LIB](https://github.com/Gravicode/due-javascript/), check duelink.js, it contains driver for DUE. The library is also available on the [downloads](https://duelink.com/software/downloads.html) page if needed.
 
 ##### Tip
 
