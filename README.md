@@ -431,7 +431,7 @@ For convenience, the Pin Enum includes, ButtonA, ButtonB and Led. For example: `
 [](#due-script-control)DUE Script Control
 -----------------------------------------
 
-These methods allow developers to control DUE Scripts right from within .NET
+These methods allow developers to control DUE Scripts right from within JS
 
 Method
 
