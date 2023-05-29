@@ -42,7 +42,7 @@ Init device and choose com port with this method
     this.comPort = new SerialInterface();
     comPort.Connect();
 
-the init the driver and display some text.
+init the driver and blink an led.
 
     if (!this.dev)
             this.dev = new DUELinkController(this.comPort);
