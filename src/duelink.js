@@ -155,7 +155,7 @@ class SerialInterface {
             this.portName.resetInputBuffer();
             this.portName.resetOutputBuffer();
             try {
-                const version = this.GetVersion();
+                const version = await this.GetVersion();
                 if (version != "" && version[2] == "." && version[4] == ".") {
                     break;
                 }
@@ -600,17 +600,17 @@ class DisplayController {
         this.serialPort = serialPort;
     }
 
-    Show() {
+    async Show() {
         let cmd = "lcdshow()";
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
         return res.success;
     }
 
-    Clear(color) {
+    async Clear(color) {
         let cmd = `lcdclear(${color})`;
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
         return res.success;
     }
 
@@ -649,10 +649,10 @@ class DisplayController {
         return res.success;
     }
 
-    DrawText(text, color, x, y) {
+    async DrawText(text, color, x, y) {
         let cmd = `lcdtext("${text}",${color},${x},${y})`;
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
         return res.success;
     }
 
@@ -724,11 +724,11 @@ class DisplayController {
         return this.DrawBuffer(data32);
     }
 
-    Configuration(target, slaveAddress) {
+    async Configuration(target, slaveAddress) {
         const cmd = `lcdconfig(${target},${slaveAddress})`;
 
         this.serialPort.WriteCommand(cmd);
-        const res = this.serialPort.ReadRespone();
+        const res = await this.serialPort.ReadRespone();
         return res.success;
     }
 
@@ -1597,14 +1597,19 @@ class SystemController {
 
         return true;
     }
-
-    Wait(millisecond) {
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    async Wait(millisecond) {
         let cmd = `wait(${millisecond})`;
         this.serialPort.WriteCommand(cmd);
-        setTimeout(() => {
-            this.serialPort.ReadRespone();
-        }, millisecond);
-        return true;
+        this.sleep(millisecond);
+        var res = await this.serialPort.ReadRespone();
+        /*
+        setTimeout(async() => {
+            var res = await this.serialPort.ReadRespone();
+        }, millisecond);*/
+        return res.success;
     }
 }
 
