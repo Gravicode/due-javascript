@@ -614,38 +614,38 @@ class DisplayController {
         return res.success;
     }
 
-    SetPixel(color, x, y) {
+    async SetPixel(color, x, y) {
         let cmd = `lcdpixel(${color},${x},${y})`;
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
         return res.success;
     }
 
-    DrawCircle(color, x, y, radius) {
+    async DrawCircle(color, x, y, radius) {
         let cmd = `lcdcircle(${color},${x},${y},${radius})`;
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
         return res.success;
     }
 
-    DrawRectangle(color, x, y, width, height) {
+    async DrawRectangle(color, x, y, width, height) {
         let cmd = `lcdrect(${color},${x},${y},${width},${height})`;
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
         return res.success;
     }
 
-    DrawFillRect(color, x, y, width, height) {
+    async DrawFillRect(color, x, y, width, height) {
         let cmd = `lcdfill(${color},${x},${y},${width},${height})`;
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
         return res.success;
     }
 
-    DrawLine(color, x1, y1, x2, y2) {
+    async DrawLine(color, x1, y1, x2, y2) {
         let cmd = `lcdline(${color},${x1},${y1},${x2},${y2})`;
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
         return res.success;
     }
 
@@ -656,27 +656,27 @@ class DisplayController {
         return res.success;
     }
 
-    DrawTextScale(text, color, x, y, scalewidth, scaleheight) {
+    async DrawTextScale(text, color, x, y, scalewidth, scaleheight) {
         let cmd = `lcdtexts("${text}",${color},${x},${y},${scalewidth},${scaleheight})`;
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
         return res.success;
     }
 
-    __Stream(data) {
+    async __Stream(data) {
         let cmd = "lcdstream()";
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
 
         if (res.success) {
             this.serialPort.WriteRawData(data, 0, data.length);
             // time.sleep(10);
-            res = this.serialPort.ReadRespone();
+            res = await this.serialPort.ReadRespone();
         }
 
         return res.success;
     }
-    DrawBuffer(color) {
+    async DrawBuffer(color) {
         const WIDTH = 128;
         const HEIGHT = 64;
 
@@ -704,10 +704,10 @@ class DisplayController {
             }
         }
 
-        return this.__Stream(data);
+        return await this.__Stream(data);
     }
 
-    DrawBufferBytes(color) {
+    async DrawBufferBytes(color) {
         let offset = 0;
         const length = color.length;
 
@@ -721,7 +721,7 @@ class DisplayController {
             data32[i] = (color[(i + offset) * 4 + 0] << 0) | (color[(i + offset) * 4 + 1] << 8) | (color[(i + offset) * 4 + 2] << 16) | (color[(i + offset) * 4 + 3] << 24);
         }
 
-        return this.DrawBuffer(data32);
+        return await this.DrawBuffer(data32);
     }
 
     async Configuration(target, slaveAddress) {
@@ -732,7 +732,7 @@ class DisplayController {
         return res.success;
     }
 
-    DrawImageScale(img, x, y, scaleWidth, scaleHeight, transform) {
+    async DrawImageScale(img, x, y, scaleWidth, scaleHeight, transform) {
         const width = img[0];
         const height = img[1];
 
@@ -743,13 +743,13 @@ class DisplayController {
         let cmd = `dim a[${img.length}]`;
 
         this.serialPort.WriteCommand(cmd);
-        let res = this.serialPort.ReadRespone();
+        let res = await this.serialPort.ReadRespone();
 
 
         for (let i = 0; i < img.length; i++) {
             cmd = `a[${i}] = ${img[i]}`;
             this.serialPort.WriteCommand(cmd);
-            res = this.serialPort.ReadRespone();
+            res = await this.serialPort.ReadRespone();
 
             if (res.success === false) {
                 break;
@@ -760,20 +760,20 @@ class DisplayController {
             cmd = `lcdimgs(a, ${x}, ${y}, ${scaleWidth}, ${scaleHeight}, ${transform})`;
 
             this.serialPort.WriteCommand(cmd);
-            res = this.serialPort.ReadRespone();
+            res = await this.serialPort.ReadRespone();
         }
 
 
         cmd = "dim a[0]";
 
         this.serialPort.WriteCommand(cmd);
-        res = this.serialPort.ReadRespone();
+        res = await this.serialPort.ReadRespone();
 
         return res.success;
     }
 
-    DrawImage(img, x, y, transform) {
-        return this.DrawImageScale(img, x, y, 1, 1, transform);
+    async DrawImage(img, x, y, transform) {
+        return await this.DrawImageScale(img, x, y, 1, 1, transform);
     }
 
     __get_transform_none() {
@@ -1547,7 +1547,7 @@ class SystemController {
 
             this.displayText[SystemController.DISPLAY_MAX_LINES - 1] = "";
         } else {
-            this.displayText[SystemController.DISPLAY_MAX_LINES - 1] +=
+            this.displayText[SystemController.DISPLAY_MAX_LINES - 1] =
                 this.displayText[SystemController.DISPLAY_MAX_LINES - 1] + c;
             this.print_posx += 1;
         }
